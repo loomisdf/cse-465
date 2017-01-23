@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.jar.Pack200;
 
 public class hw1 {
     private static HashMap<String, Object> vars;
