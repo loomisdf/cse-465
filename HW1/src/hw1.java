@@ -25,23 +25,52 @@ public class hw1 {
             }
             vars.put(lhs, vars.get(rhs));
         }
-
     }
 
     public static void addition(String lhs, String rhs) {
-
+        if(rhs.matches("^-?\\d+$")) {
+            // rhs is just an integer
+            vars.put(lhs, (int)vars.get(lhs) + Integer.parseInt(rhs));
+        }
+        else if(!vars.containsKey(rhs)) {
+            System.err.printf("RUNTIME ERROR: line %d, variable %s does not exist\n", lineNumber, rhs);
+            System.exit(0);
+        }
+        else {
+            vars.put(lhs, (int)vars.get(lhs) + (int)vars.get(rhs));
+        }
     }
 
     public static void subtraction(String lhs, String rhs) {
-
+        if(rhs.matches("^-?\\d+$")) {
+            // rhs is just an integer
+            vars.put(lhs, (int)vars.get(lhs) - Integer.parseInt(rhs));
+        }
+        else if(!vars.containsKey(rhs)) {
+            System.err.printf("RUNTIME ERROR: line %d, variable %s does not exist\n", lineNumber, rhs);
+            System.exit(0);
+        }
+        else {
+            vars.put(lhs, (int)vars.get(lhs) - (int)vars.get(rhs));
+        }
     }
 
     public static void multiplication(String lhs, String rhs) {
-
+        if(rhs.matches("^-?\\d+$")) {
+            // rhs is just an integer
+            vars.put(lhs, (int)vars.get(lhs) * Integer.parseInt(rhs));
+        }
+        else if(!vars.containsKey(rhs)) {
+            System.err.printf("RUNTIME ERROR: line %d, variable %s does not exist\n", lineNumber, rhs);
+            System.exit(0);
+        }
+        else {
+            vars.put(lhs, (int)vars.get(lhs) * (int)vars.get(rhs));
+        }
     }
 
     public static void print(String var) {
-
+        System.out.println(vars.get(var));
     }
 
     public static void parseLine(String line) {
@@ -49,12 +78,25 @@ public class hw1 {
         // check if the first token is a reserved word
         if(Arrays.asList(reservedWords).contains(tokens[0])) {
             // token is a reserved word
-
+            switch(tokens[0]) {
+                case "PRINT":
+                    print(tokens[1]);
+                    break;
+            }
         }
         else {
             // token is a custom value
             if(tokens[1].equals("=")) {
                 assignment(tokens[0], tokens[2]);
+            }
+            if(tokens[1].equals("+=")) {
+                addition(tokens[0], tokens[2]);
+            }
+            if(tokens[1].equals("-=")) {
+                subtraction(tokens[0], tokens[2]);
+            }
+            if(tokens[1].equals("*=")) {
+                multiplication(tokens[0], tokens[2]);
             }
         }
     }
