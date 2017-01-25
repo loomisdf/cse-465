@@ -80,12 +80,35 @@ public class hw1 {
             }
             else {
                 if (lhs_var.type == Type.INTEGER) {
-                    lhs_var.value = (int) lhs_var.value + (int) rhs.value;
-                    vars.replace(lhs.value.toString(), lhs_var);
+                    switch(operator) {
+                        case '+':
+                            lhs_var.value = (int) lhs_var.value + (int) rhs.value;
+                            vars.replace(lhs.value.toString(), lhs_var);
+                            break;
+
+                        case '-':
+                            lhs_var.value = (int) lhs_var.value - (int) rhs.value;
+                            vars.replace(lhs.value.toString(), lhs_var);
+                            break;
+
+                        case '*':
+                            lhs_var.value = (int) lhs_var.value * (int) rhs.value;
+                            vars.replace(lhs.value.toString(), lhs_var);
+                            break;
+                    }
                 }
                 else if (lhs_var.type == Type.STRING) {
-                    lhs_var.value = lhs_var.value + (String) rhs.value;
-                    vars.replace(lhs.value.toString(), lhs_var);
+                    switch(operator) {
+                        case '+':
+                            lhs_var.value = lhs_var.value + (String) rhs.value;
+                            vars.replace(lhs.value.toString(), lhs_var);
+                            break;
+
+                        default:
+                            System.err.printf("RUNTIME ERROR: line %d, Cannot use %c with strings\n", lineNumber, operator);
+                            System.exit(0);
+                            break;
+                    }
                 }
             }
         }

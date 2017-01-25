@@ -1,4 +1,5 @@
-A = "butts" ;
-B = "hello" ;
-A *= B ;
+A = "Hello" ;
+B = 5 ;
+A += " World!" ;
 PRINT A ;
+PRINT B ;
