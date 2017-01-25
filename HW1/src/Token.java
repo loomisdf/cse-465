@@ -25,19 +25,19 @@ public class Token {
         }
         else if(str.equals("=")) {
             this.type = Type.ASSIGN;
-            this.value = "assign";
+            this.value = "=";
         }
         else if(str.equals("+=")) {
             this.type = Type.ADD;
-            this.value = "add";
+            this.value = "+=";
         }
         else if(str.equals("-=")) {
             this.type = Type.SUBTRACT;
-            this.value = "subtract";
+            this.value = "-=";
         }
         else if(str.equals("*=")) {
             this.type = Type.MULTIPLY;
-            this.value = "multiply";
+            this.value = "*=";
         }
         else if(str.equals(";")) {
             this.type = Type.SEMICOLON;
@@ -58,6 +58,21 @@ public class Token {
                 this.value = str;
             }
         }
+    }
 
+    @Override
+    public boolean equals(Object other) {
+        Token t = (Token)other;
+        if(this.type == t.type) {
+            if(this.type == Type.STRING) {
+                if(this.value.toString().equals(t.value.toString()))
+                    return true;
+            }
+            else {
+                if((int)this.value == (int)t.value)
+                    return true;
+            }
+        }
+        return false;
     }
 }

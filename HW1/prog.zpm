@@ -1,3 +1,4 @@
-C = "Hello World" ;
-B = 123 ;
-A = B ;
+A = "butts" ;
+B = "hello" ;
+A *= B ;
+PRINT A ;
