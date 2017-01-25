@@ -1,5 +1,6 @@
 /**
  * Created by Daltin-Desk on 1/24/2017.
+ * Token Class
  */
 public class Token {
     public Type type;

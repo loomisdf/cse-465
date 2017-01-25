@@ -1,5 +1,6 @@
 /**
  * Created by Daltin-Desk on 1/25/2017.
+ * Variable class
  */
 public class Variable {
     public Type type;
