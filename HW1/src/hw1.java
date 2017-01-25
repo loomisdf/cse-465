@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -11,94 +12,86 @@ public class hw1 {
     private static Scanner fileInput;
     private static int lineNumber;
 
-    //TODO handle string assignment
-    public static void assignment(String lhs, String rhs) {
-        if(rhs.matches("^-?\\d+$")) {
-            // rhs is just an integer
-            vars.put(lhs, Integer.parseInt(rhs));
-        }
-        else {
-            // rhs is another variable
-            if(!vars.containsKey(rhs)) {
-                System.err.printf("RUNTIME ERROR: line %d, variable %s does not exist\n", lineNumber, rhs);
+    public static void assignment(Token lhs, Token rhs) {
+        if(rhs.type == Type.VAR) {
+            // if rhs is a variable
+            if(!vars.containsKey(rhs.value)) {
+                System.err.printf("RUNTIME ERROR: line %d, variable %s has no value\n", lineNumber, rhs);
                 System.exit(0);
             }
-            vars.put(lhs, vars.get(rhs));
+            else {
+                vars.put(lhs.value.toString(), vars.get(rhs.value));
+            }
+        }
+        else {
+            // if rhs is a string literal or integer
+            vars.put(lhs.value.toString(), rhs.value);
         }
     }
 
     public static void addition(String lhs, String rhs) {
-        if(rhs.matches("^-?\\d+$")) {
-            // rhs is just an integer
-            vars.put(lhs, (int)vars.get(lhs) + Integer.parseInt(rhs));
-        }
-        else if(!vars.containsKey(rhs)) {
-            System.err.printf("RUNTIME ERROR: line %d, variable %s does not exist\n", lineNumber, rhs);
-            System.exit(0);
-        }
-        else {
-            vars.put(lhs, (int)vars.get(lhs) + (int)vars.get(rhs));
-        }
     }
 
     public static void subtraction(String lhs, String rhs) {
-        if(rhs.matches("^-?\\d+$")) {
-            // rhs is just an integer
-            vars.put(lhs, (int)vars.get(lhs) - Integer.parseInt(rhs));
-        }
-        else if(!vars.containsKey(rhs)) {
-            System.err.printf("RUNTIME ERROR: line %d, variable %s does not exist\n", lineNumber, rhs);
-            System.exit(0);
-        }
-        else {
-            vars.put(lhs, (int)vars.get(lhs) - (int)vars.get(rhs));
-        }
     }
 
     public static void multiplication(String lhs, String rhs) {
-        if(rhs.matches("^-?\\d+$")) {
-            // rhs is just an integer
-            vars.put(lhs, (int)vars.get(lhs) * Integer.parseInt(rhs));
-        }
-        else if(!vars.containsKey(rhs)) {
-            System.err.printf("RUNTIME ERROR: line %d, variable %s does not exist\n", lineNumber, rhs);
-            System.exit(0);
-        }
-        else {
-            vars.put(lhs, (int)vars.get(lhs) * (int)vars.get(rhs));
-        }
     }
 
-    public static void print(String var) {
-        System.out.println(vars.get(var));
+    public static void print(Token var) {
+        System.out.println(vars.get(var.value));
     }
 
     public static void parseLine(String line) {
-        String[] tokens = line.split(" ");
-        // check if the first token is a reserved word
-        if(Arrays.asList(reservedWords).contains(tokens[0])) {
-            // token is a reserved word
-            switch(tokens[0]) {
-                case "PRINT":
-                    print(tokens[1]);
-                    break;
+        ArrayList<String> strings = new ArrayList<>();
+        String value = "";
+        boolean stringFound = false;
+        char curr_char = ' ';
+        char prev_char = ' ';
+        for(int i = 0; i < line.length(); i++) {
+            curr_char = line.charAt(i);
+            if(stringFound) {
+                value += curr_char;
+                if(prev_char != '\\' && curr_char == '"') {
+                    strings.add(value);
+                    stringFound = false;
+                    value = "";
+                }
             }
+            else {
+                if (curr_char == '"') {
+                    stringFound = true;
+                }
+                if (curr_char == ' ') {
+                    if(!value.equals(""))
+                        strings.add(value);
+                    value = "";
+                }
+                else if(curr_char == ';') {
+                    strings.add(";");
+                }
+                else {
+                    value += curr_char;
+                }
+            }
+            prev_char = curr_char;
         }
-        else {
-            // token is a custom value
-            if(tokens[1].equals("=")) {
-                assignment(tokens[0], tokens[2]);
-            }
-            if(tokens[1].equals("+=")) {
-                addition(tokens[0], tokens[2]);
-            }
-            if(tokens[1].equals("-=")) {
-                subtraction(tokens[0], tokens[2]);
-            }
-            if(tokens[1].equals("*=")) {
-                multiplication(tokens[0], tokens[2]);
-            }
+
+        ArrayList<Token> tokens = new ArrayList<>();
+        for(String str : strings) {
+            tokens.add(new Token(str));
         }
+
+        if(tokens.get(0).value.equals("print")) {
+            print(tokens.get(1));
+        }
+        else if(tokens.get(0).value.equals("endfor")) {
+
+        }
+        else if(tokens.get(1).type == Type.ASSIGN) {
+            assignment(tokens.get(0), tokens.get(2));
+        }
+        System.out.println();
     }
 
     public static void main(String[] args) {
