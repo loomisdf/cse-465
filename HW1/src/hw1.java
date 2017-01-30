@@ -9,6 +9,7 @@ public class hw1 {
     private static HashMap<String, Variable> vars;
     private static String[] reservedWords = {"PRINT", "FOR", "ENDFOR"};
     private static String[] COMPOUND_ASSIGNMENTS = {"+=", "-=", "*="};
+    private static Type[] COMPOUND_TYPES = {Type.ADD, Type.MULTIPLY, Type.SUBTRACT};
 
     private static Scanner fileInput;
     private static int lineNumber;
@@ -114,6 +115,56 @@ public class hw1 {
         }
     }
 
+    public static void forLoop(ArrayList<Token> tokens) {
+        ArrayList<Statement> statements = new ArrayList<>();
+        int repeat = Integer.parseInt(tokens.get(1).value.toString());
+
+        // break up the tokens into statements
+        for(int i = 1; i < tokens.size(); i++) {
+            if(tokens.get(i).value.toString().equals("for")) {
+                ArrayList<Token> nestedToks = new ArrayList<>();
+                int startIndex = i;
+                int endIndex = tokens.size();
+                // find last index of endfor
+                for(int k = tokens.size() - 2; k > startIndex; k--) {
+                    if(tokens.get(k).value.toString().equals("endfor")) {
+                        endIndex = k;
+                        break;
+                    }
+                }
+                String value = "";
+                for(int k = i; k <= endIndex; k++) {
+                    nestedToks.add(tokens.get(k));
+                    value += tokens.get(k).value.toString() + " ";
+                }
+                value += "endfor";
+                statements.add(new For_Statement(nestedToks, value));
+                i = endIndex + 1;
+            }
+            if(tokens.get(i).type == Type.SEMICOLON) {
+                Token op_token = tokens.get(i - 2);
+                statements.add(new Operation_Statement(tokens.get(i - 3), tokens.get(i - 1), op_token.value.toString(), op_token.value.toString()));
+            }
+        }
+
+        for(int i = 0; i < repeat; i++) {
+            for(Statement st : statements) {
+                if(st instanceof Operation_Statement) {
+                    Operation_Statement op_st = (Operation_Statement) st;
+                    if (op_st.operation.equals("=")) {
+                        assignment(op_st.lhs, op_st.rhs);
+                    } else {
+                        compound_assign(op_st.lhs, op_st.rhs, op_st.operation.charAt(0));
+                    }
+                }
+                else if(st instanceof For_Statement) {
+                    For_Statement for_st = (For_Statement) st;
+                    forLoop(for_st.tokens);
+                }
+            }
+        }
+    }
+
     public static void print(Token tok) {
         Variable v = getVar(tok);
         System.out.println(v.name + "=" + v.value);
@@ -140,7 +191,11 @@ public class hw1 {
                 if (curr_char == '"') {
                     stringFound = true;
                 }
-                if (curr_char == ' ') {
+                if(value.equals("ENDFO")) {
+                    tokens.add(new Token(Type.ENDFOR, "endfor"));
+                    value = "";
+                }
+                else if (curr_char == ' ') {
                     if(!value.equals(""))
                         tokens.add(new Token(value));
                     value = "";
@@ -164,8 +219,8 @@ public class hw1 {
         if(tokens.get(0).value.equals("print")) {
             print(tokens.get(1));
         }
-        else if(tokens.get(0).value.equals("endfor")) {
-
+        else if(tokens.get(0).value.equals("for")) {
+            forLoop(tokens);
         }
         else if(tokens.get(1).type == Type.ASSIGN) {
             assignment(tokens.get(0), tokens.get(2));

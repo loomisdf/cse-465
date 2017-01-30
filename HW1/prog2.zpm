@@ -1,0 +1,18 @@
+a = 3 ;
+a *= 30 ;
+a = 3 ;
+a += 10 ;
+a -= 10 ;
+b = 0 ;
+b += a ;
+b += b ;
+a = a ;
+a += 4 ;
+b += 2 ;
+PRINT a ;
+PRINT b ;
+a = "hello" ;
+b = "world" ;
+a += b ;
+PRINT a ;
+PRINT b ;

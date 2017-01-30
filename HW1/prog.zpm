@@ -1,5 +1,8 @@
-A = "Hello" ;
-B = 5 ;
-A += " World!" ;
+A = 10 ;
+A += A ;
 PRINT A ;
-PRINT B ;
+A = "hello" ;
+A += A ;
+PRINT A ;
+A += 123 ;
+PRINT A ;

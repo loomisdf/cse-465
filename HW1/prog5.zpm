@@ -1,0 +1,9 @@
+A = 1 ;
+B = 0 ;
+FOR 1 B += A ; A *= 2 ; ENDFOR
+FOR 8 B += A ; A *= 2 ; ENDFOR
+FOR 1 B += A ; A *= 2 ; ENDFOR
+A += 1000 ;
+FOR 5 B -= A ; A += 2 ; ENDFOR
+PRINT A ;
+PRINT B ;
