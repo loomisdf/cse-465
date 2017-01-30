@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class hw1 {
     private static HashMap<String, Variable> vars;
     private static String[] reservedWords = {"PRINT", "FOR", "ENDFOR"};
-    private static String[] COMPOUND_ASSIGNMENTS = {"+=", "-=", "*="};
     private static Type[] COMPOUND_TYPES = {Type.ADD, Type.MULTIPLY, Type.SUBTRACT};
 
     private static Scanner fileInput;
@@ -216,16 +215,16 @@ public class hw1 {
     public static void parseLine(String line) {
         ArrayList<Token> tokens = getTokens(line);
 
-        if(tokens.get(0).value.equals("print")) {
+        if(tokens.get(0).type == Type.PRINT) {
             print(tokens.get(1));
         }
-        else if(tokens.get(0).value.equals("for")) {
+        else if(tokens.get(0).type == Type.FOR) {
             forLoop(tokens);
         }
         else if(tokens.get(1).type == Type.ASSIGN) {
             assignment(tokens.get(0), tokens.get(2));
         }
-        else if(Arrays.asList(COMPOUND_ASSIGNMENTS).contains(tokens.get(1).value.toString())) {
+        else if(Arrays.asList(COMPOUND_TYPES).contains(tokens.get(1).type)) {
             compound_assign(tokens.get(0), tokens.get(2), tokens.get(1).value.toString().charAt(0));
         }
     }
@@ -244,6 +243,5 @@ public class hw1 {
             parseLine(line);
             lineNumber++;
         }
-        System.out.println("END PROGRAM");
     }
 }
