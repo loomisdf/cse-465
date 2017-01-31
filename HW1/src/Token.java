@@ -69,6 +69,9 @@ public class Token {
                 if(this.value.toString().equals(t.value.toString()))
                     return true;
             }
+            if(this.type == Type.ENDFOR && t.type == Type.ENDFOR) {
+                return true;
+            }
             else {
                 if((int)this.value == (int)t.value)
                     return true;

@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
-public class hw1 {
+public class HW1 {
     private static HashMap<String, Variable> vars;
     private static String[] reservedWords = {"PRINT", "FOR", "ENDFOR"};
     private static Type[] COMPOUND_TYPES = {Type.ADD, Type.MULTIPLY, Type.SUBTRACT};
@@ -120,14 +120,13 @@ public class hw1 {
 
         // break up the tokens into statements
         for(int i = 1; i < tokens.size(); i++) {
-            if(tokens.get(i).value.toString().equals("for")) {
+            if(tokens.get(i).type == Type.FOR) {
                 ArrayList<Token> nestedToks = new ArrayList<>();
-                int startIndex = i;
-                int endIndex = tokens.size();
-                // find last index of endfor
-                for(int k = tokens.size() - 2; k > startIndex; k--) {
-                    if(tokens.get(k).value.toString().equals("endfor")) {
-                        endIndex = k;
+                int endIndex = tokens.size() - 2;
+                // find endIndex
+                for(int e = endIndex; e > i; e--) {
+                    if(tokens.get(e).type == Type.ENDFOR) {
+                        endIndex = e;
                         break;
                     }
                 }
@@ -136,7 +135,6 @@ public class hw1 {
                     nestedToks.add(tokens.get(k));
                     value += tokens.get(k).value.toString() + " ";
                 }
-                value += "endfor";
                 statements.add(new For_Statement(nestedToks, value));
                 i = endIndex + 1;
             }
@@ -229,12 +227,11 @@ public class hw1 {
         }
     }
 
-    public static void main(String[] args) {
+    public static void parseFile(String filename) {
         vars = new HashMap<>();
         lineNumber = 1;
-
         try {
-            fileInput = new Scanner(new File(args[0]));
+            fileInput = new Scanner(new File(filename));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -243,5 +240,16 @@ public class hw1 {
             parseLine(line);
             lineNumber++;
         }
+
+    }
+
+    public static void main(String[] args) {
+        String filename = args[0];
+        long beforetime = System.nanoTime();
+        parseFile(filename);
+        long aftertime = System.nanoTime();
+
+        System.out.printf("Runtime %d ms", (aftertime - beforetime) / 1000000);
+
     }
 }
