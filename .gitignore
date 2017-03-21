@@ -41,4 +41,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+# Ignore Mac file
 .DS_Store
+
+# ignore vim autosaves
+*~
