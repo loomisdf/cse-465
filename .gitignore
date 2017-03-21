@@ -45,4 +45,4 @@ fabric.properties
 .DS_Store
 
 # ignore vim autosaves
-*~
+*.*~
