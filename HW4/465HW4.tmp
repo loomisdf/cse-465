@@ -1,0 +1,14 @@
+Name: <<NAME>>	(<<COURSE>>)
+ID: <<ID>>
+Total: <<TOTAL>>/100	Subtotal: <<SUBTOTAL>>		Total deductions: <<LATEDEDUCTION>>
+
+Time due: <<DUE>>
+Submitted: <<SUBMITTED>>
+Late minutes: <<MINUTESLATE>>
+Late deduction: <<LATEDEDUCTION>>
+
+Problem 1: <<P1>>/35
+<<P1COMMENTS>>
+
+Problem 2: <<P2>>/65
+<<P2COMMENTS>>

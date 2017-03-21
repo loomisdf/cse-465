@@ -1,0 +1,5 @@
+NAME	ID	COURSE	DUE	SUBMITTED	MINUTESLATE	LATEDEDUCTION	P1	P1COMMENTS	P2	P2COMMENTS	SUBTOTAL	TOTAL
+Steve Smith	smiths	465	2/5/2016 23:59:00	2/6/2016 0:45:00	46	1	35	Excellent work	65	Nice	100	99
+Mark Watson	watsonm	465	2/5/2016 23:59:00	2/6/2016 3:47:00	228	5	30	Test case 10 provides incorrect output; otherwise, nicely done.	65	Well done	95	90
+Kenny Briddle	briddlek	465	2/5/2016 23:59:00	ontime	0	0	15	Many test cases missing.	55	Missing the report.	70	70
+Bill Haygood	haygoodb	565	2/5/2016 23:59:00	ontime	0	0	0	Not attempted	65	Nice	65	65

@@ -1,0 +1,14 @@
+Name: Mark Watson	(465)
+ID: watsonm
+Total: 90/100	Subtotal: 95		Total deductions: 5
+
+Time due: 2/5/2016 23:59:00
+Submitted: 2/6/2016 3:47:00
+Late minutes: 228
+Late deduction: 5
+
+Problem 1: 30/35
+Test case 10 provides incorrect output; otherwise, nicely done.
+
+Problem 2: 65/65
+Well done
