@@ -23,21 +23,21 @@ class Parser:
         self.records = []
 
     def parseFile(self, fileName, templateFileName):
-        templateFile = open(templateFileName, 'r')
-        for line in templateFile:
-            self.template += line
+        with open(templateFileName, 'r') as templateFile:
+            for line in templateFile:
+                self.template += line
 
         self.template = self.template.strip()
 
-        dataFile = open(fileName, 'r')
-        columnIDs = [word.strip() for word in dataFile.readline().split('\t')]
+        with open(fileName, 'r') as dataFile:
+            columnIDs = [word.strip() for word in dataFile.readline().split('\t')]
 
-        for line in dataFile:
-            column_data = [word.strip() for word in line.split('\t')]
-            r = Record()
-            for i in range(len(columnIDs)):
-                r.addRecord(columnIDs[i], column_data[i])
-            self.records.append(r)
+            for line in dataFile:
+                column_data = [word.strip() for word in line.split('\t')]
+                r = Record()
+                for i in range(len(columnIDs)):
+                    r.addRecord(columnIDs[i], column_data[i])
+                self.records.append(r)
 
         for record in self.records:
             record.createOutputFile(self.template)
