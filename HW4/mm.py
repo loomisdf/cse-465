@@ -4,7 +4,7 @@ class Record:
     def __init__(self):
         self.info = {}
 
-    def addRecord(self, col_id, col_data):
+    def addColData(self, col_id, col_data):
         self.info[col_id] = col_data
 
     def createOutputFile(self, template):
@@ -36,7 +36,7 @@ class Parser:
                 column_data = [word.strip() for word in line.split('\t')]
                 r = Record()
                 for i in range(len(columnIDs)):
-                    r.addRecord(columnIDs[i], column_data[i])
+                    r.addColData(columnIDs[i], column_data[i])
                 self.records.append(r)
 
         for record in self.records:
