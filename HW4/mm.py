@@ -47,7 +47,8 @@ if __name__ == "__main__":
 
     parser = Parser()
 
-    if(len(sys.argv) <= 4 and len(sys.argv) > 1):
+    if(len(sys.argv) <= 3 and len(sys.argv) > 1):
         parser.parseFile(sys.argv[1], sys.argv[2])
     else:
         print("Wrong number of program arguments")
+        print("Program usage:\n>\t python3 mm.py {tsvFile} {tmpFile}")
