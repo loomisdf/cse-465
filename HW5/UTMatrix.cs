@@ -12,7 +12,8 @@ namespace UTMatrix {
 	// and includes all N*N elements of the matrix.
 	public class UTMatrixEnumerator : IEnumerator {
 		public UTMatrix matrix;
-		public int currItem;
+		public int currRow;
+		public int currCol;
 
 		public UTMatrixEnumerator(UTMatrix matrix) {
 			this.matrix = matrix;
@@ -20,12 +21,23 @@ namespace UTMatrix {
 		}
 
 		public void Reset() {
-			currItem = -1;
+			currRow = -1;
+			currCol = -1;
 		}
 
 		public bool MoveNext() {
-			currItem++;
-			return currItem < matrix.getSize();
+			if(currRow == -1) {
+				currRow++;
+			}
+			if(currCol == matrix.getSize() - 1) {
+				currCol = 0;
+				currRow++;
+			}
+			else {
+				currCol++;
+			}
+
+			return currRow < matrix.getSize();
 		}
 
 		object IEnumerator.Current {
@@ -37,7 +49,7 @@ namespace UTMatrix {
 		public int Current {
 			get {
 				try {
-					return matrix.data[currItem];
+					return matrix.get(currRow, currCol);
 				}
 				catch (IndexOutOfRangeException) {
 					throw new InvalidOperationException();
@@ -48,7 +60,7 @@ namespace UTMatrix {
 	public class UTMatrix : IEnumerable {
 		// Must use a one dimensional array, having minumum size.
 		public int [] data;
-		public int _size;
+		public int _num_elements;
 		public int _n;
 
 		// Construct an NxN Upper Triangular Matrix, initialized to 0
@@ -58,13 +70,13 @@ namespace UTMatrix {
 				// Throw error
 			}
 			_n = N;
-			_size = (int)(Math.Pow(N, 2) + N) / 2;
-			data = new int[_size];
+			_num_elements = (int)(Math.Pow(N, 2) + N) / 2;
+			data = new int[_num_elements];
 		}
 
 		// Returns the size of the matrix
 		public int getSize() {
-			return _size;
+			return _n;
 		}
 
 		// Returns an upper triangular matrix that is the summation of a & b.
@@ -75,7 +87,7 @@ namespace UTMatrix {
 				return null;
 			}
 			UTMatrix ret = new UTMatrix(a._n);
-			for(int i = 0; i < ret._size; i++) {
+			for(int i = 0; i < ret._num_elements; i++) {
 				ret.data[i] = a.data[i] + b.data[i];
 			}
 			return ret;
@@ -104,9 +116,8 @@ namespace UTMatrix {
 		// Returns the position in the 1D array for [r][c].
 		// Throws an error if [r][c] is an invalid index
 		public int accessFunc(int r, int c) {
-			int i = (_n * r) + c - ((r * (r + 1) / 2));
-			if (i >= _size) {
-				Console.WriteLine("Invalid Index");
+			int i = (_n * r) + c - ((r * (r + 1)) / 2);
+			if (r > c) {
 				i = -1;
 			}
 			return i;
@@ -121,28 +132,17 @@ namespace UTMatrix {
 			return new UTMatrixEnumerator(this);
 		}
 
-		public static void Main(String [] args) {
-			UTMatrix ut = new UTMatrix(4);
-			ut.set(0, 0, 1);
-			ut.set(0, 1, 7);
-			ut.set(0, 2, -8);
-			ut.set(0, 3, 0);
-			ut.set(1, 1, 8);
-			ut.set(1, 2, 10);
-			ut.set(1, 3, 9);
-			ut.set(2, 2, 7);
-			ut.set(2, 3, 3);
-			ut.set(3, 3, -9);
-			UTMatrix b = new UTMatrix(4);
-			b.set(0, 0, 2);
-			UTMatrix d = ut + b;
-			Console.Write("[ ");
-			foreach(int i in d.data) {
-				Console.Write(i + " ");
+		// For debug purposes
+		public void PrintMatrix() {
+			for(int r = 0; r < this.getSize(); r++) {
+				for(int c = 0; c < this.getSize(); c++) {
+					Console.Write(this.get(r, c) + " ");
+				}
+				Console.Write("\n");
 			}
-			Console.WriteLine("]");
+		}
 
-
+		public static void Main(String [] args) {
 			const int N = 5;
 			UTMatrix ut1 = new UTMatrix(N);
 			UTMatrix ut2 = new UTMatrix(N);
