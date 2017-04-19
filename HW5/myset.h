@@ -124,7 +124,7 @@ public:
 
 				memcpy(newData, data, _capacity * sizeof(int));
 
-				delete []data;
+				delete []data; // Free memory
 				data = newData;
 				_capacity = new_capacity;
 			}
@@ -144,6 +144,7 @@ public:
 		}
 		return false;
 	}
+
 	// Returns an array containing the elements in the set.
 	// This array is dynamically allocated an must be deleted by
 	// the caller.
