@@ -31,12 +31,14 @@ namespace HW6 {
 				return String.Format("(%d, %d)", x, y);
 			}
 		}
+
 		public static void Display<T>(IEnumerable<T> items) {
 			foreach (T item in items) {
 				Console.Write(item + " ");
 			}
 			Console.WriteLine();
 		}
+
 		public static bool NonGenericContains(IEnumerable<int> items, int value) {
 			bool found = false;
 			foreach (int v in items) {
@@ -47,6 +49,7 @@ namespace HW6 {
 			}
 			return found;
 		}
+
 		public static bool NonGenericContains(IEnumerable<string> items, string value) {
 			bool found = false;
 			foreach (string v in items) {
@@ -57,6 +60,7 @@ namespace HW6 {
 			}
 			return found;
 		}
+
 		public static bool NonGenericContains(IEnumerable<Point> items, Point value) {
 			bool found = false;
 			foreach (Point v in items) {
@@ -67,6 +71,64 @@ namespace HW6 {
 			}
 			return found;
 		}
+
+		public static bool Contains<T>(IEnumerable<T> items, T value) {
+			bool found = false;
+			foreach (T v in items) {
+				if (v.Equals(value)) {
+					found = true;
+					break;
+				}
+			}
+			return found;
+		}
+
+		public static bool IsSorted<T>(IEnumerable<T> items) where T : IComparable {
+			bool isFirst = true;
+			T prev = default(T);
+			foreach(T i in items) {
+				if(isFirst) {
+					isFirst = false;
+				}
+				else {
+					if(i.CompareTo(prev) < 0) {
+						return false;
+					}
+				}
+				prev = i;
+			}
+			return true;
+		}
+
+		// Returns the number of items that meet the requirements of exp
+		// exp must take the same type as items passed in
+		public delegate bool Expr<T>(T item);
+		public static int CountIf<T>(IEnumerable<T> items, Expr<T> exp) {
+			int sum = 0;
+			foreach(T i in items) {
+				if(exp(i)) {
+					sum++;
+				}
+			}
+			return sum;
+		}
+
+		public static List<T> Filter<T>(IEnumerable<T> items, Expr<T> exp) {
+			List<T> ret = new List<T>();
+			foreach(T i in items) {
+				if(exp(i)) {
+					ret.Add(i);
+				}
+			}
+			return ret;
+		}
+
+		public delegate T Transform<T>(T item);
+		public static void TransformIf<T>(IEnumerable<T> items, Transform<T> transform, Expr<T> exp) {
+			items = items.Select(i => exp(i)? transform(i) : i).ToList();
+			Display(items);
+		}
+
 		static void Main(string[] args) {
 			String[] strings1 = new String[] { "a", "b", "ac" };
 			String[] strings2 = new String[] { "abc", "34b", "ABDac" };
@@ -88,8 +150,7 @@ namespace HW6 {
 			Console.WriteLine(NonGenericContains(pts1, new Point(2, 3)));
 			Console.WriteLine(NonGenericContains(pts1, new Point(0, 0)));
 
-/***************************
-			Your code additions above should allow the following code to run properly
+			// Your code additions above should allow the following code to run properly
 
 			// Contains should be a generic function that works for enumerable collections of int,
 			// double, float, short, objects, etc. The second parameter should be a value whose
@@ -103,17 +164,18 @@ namespace HW6 {
 			Console.WriteLine(Contains(pts1, new Point(2, 3)));
 			Console.WriteLine(Contains(pts1, new Point(0, 0)));
 
+			/* NOTE: NOT REQUIRED */
 			// IsSorted should be a generic function that works for arrays of int, double, float, short,
 			// objects, etc. It should return true if each array element is >= to its predecessor.
 			// In a comment, identify any requirements that a client would need to know.
-			Console.WriteLine("------------IsSorted------------");
-			Console.WriteLine(IsSorted(strings1));
-			Console.WriteLine(IsSorted(ints1));
-			Console.WriteLine(IsSorted(pts1));
+			//Console.WriteLine("------------IsSorted------------");
+			//Console.WriteLine(IsSorted(strings1));
+			//Console.WriteLine(IsSorted(ints1));
+			//Console.WriteLine(IsSorted(pts1));
 
 			// CountIf should be a generic function that works for enumerable collections of int,
 			// double, float, short, objects, etc. The second parameter should be a predicate (i.e.,
-			// a function that return true/false) that accepts a single parameter whose type is 
+			// a function that return true/false) that accepts a single parameter whose type is
 			// the same as the items in the collection. This function returns the number of items
 			// in the collection that satisfy the predicate.
 			// In a comment, identify any requirements that a client would need to know.
@@ -124,7 +186,7 @@ namespace HW6 {
 
 			// Filter should be a generic function that works for enumerable collections of int,
 			// double, float, short, objects, etc. The second parameter should be a predicate (i.e.,
-			// a function that return true/false) that accepts a single parameter whose type is 
+			// a function that return true/false) that accepts a single parameter whose type is
 			// the same as the items in the collection. This function returns a List containing
 			// the items that satsify the predicate.
 			// In a comment, identify any requirements that a client would need to know.
@@ -134,6 +196,7 @@ namespace HW6 {
 			Display(Filter(strings2, x => x.Length > 2));	// get strings with more than 2 chars
 			Display(Filter(strings1, x => x.Length > 2));
 
+			/* NOTE: NOT REQUIRED */
 			// A common operation is to combine two vectors having the same length. For example,
 			// the "dot product" between two vectors is defined be: 1. multiply the corresponding
 			// pairs of array elements 2. add up all the products produced in step 1.
@@ -145,16 +208,16 @@ namespace HW6 {
 			//
 			// SumProduct should be a generic function that works for arrays of int, double, float, short,
 			// objects, etc. It should return a value having the same type as the array elements.
-			// The first two arguments of the function are the two vectors. The third parameter is the 
+			// The first two arguments of the function are the two vectors. The third parameter is the
 			// operation used to combine the individual results. The fourth parameters is applied to the
 			// corresponding array elements.
 			//
 			// This function should throw an exception if the arrays are not suitable for this operation.
 			// In a comment, identify any requirements that a client would need to know.
-			Console.WriteLine("------------SumProduct------------");
+			/*Console.WriteLine("------------SumProduct------------");
 			Console.WriteLine(SumProduct(ints1, ints2, (x, y) => x + y, (x, y) => x * y));		// Typical dot product
 			Console.WriteLine(SumProduct(ints1, ints2, (x, y) => x + y, Math.Max));
-			Console.WriteLine(SumProduct(strings1, strings2, (x, y) => x + y, (x, y) => x.CompareTo(y) <= 0 ? x : y));
+			Console.WriteLine(SumProduct(strings1, strings2, (x, y) => x + y, (x, y) => x.CompareTo(y) <= 0 ? x : y));*/
 
 			// TransformIf should be a generic function that works for an array of int,
 			// double, float, short, objects, etc. The second parameter should be function
@@ -169,7 +232,6 @@ namespace HW6 {
 			Display(strings2);
 			TransformIf(strings2, x => x.Substring(0, 2), x => x.Length > 2);	// Truncate long strings
 			Display(strings2);
-***************************/
 		}
 	}
 }
