@@ -1,8 +1,10 @@
 # This function should behave in a manner similar
 # to the C# version.
 def transformIf(items, F, P):
-	# fill this in
-	None
+    for i in range(len(items)):
+        if(P(items[i])):
+            items[i] = F(items[i])
+    None
 
 L1 = [-3, -2, -1, 0, 1, 2, 3]
 transformIf(L1, lambda x : x * x, lambda x : x < 0)
