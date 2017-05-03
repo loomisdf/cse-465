@@ -124,9 +124,13 @@ namespace HW6 {
 		}
 
 		public delegate T Transform<T>(T item);
-		public static void TransformIf<T>(IEnumerable<T> items, Transform<T> transform, Expr<T> exp) {
-			items = items.Select(i => exp(i)? transform(i) : i).ToList();
-			Display(items);
+		public static void TransformIf<T>(T[] items, Transform<T> transform, Expr<T> exp) {
+			for(int i = 0; i < items.Count(); i++) {
+				if(exp(items[i])) {
+					items[i] = transform(items[i]);
+				}
+			}
+			//Display(items);
 		}
 
 		static void Main(string[] args) {
